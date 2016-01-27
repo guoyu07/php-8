@@ -8,6 +8,6 @@
 
 #### 3. 作品截图
 
-[在线预览](http://123.125.130.41/calculator/index.html )
+[在线预览](http://123.125.130.41/calculator/index.html)
 
 ![img](http://123.125.130.41/calculator/img/1.pic.jpg)
