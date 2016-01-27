@@ -3,5 +3,5 @@
 1. [JavaScript实现满屏滚动的气球](/ball)
 2. [Swoole实现网页版在线聊天室](/web-chat-swoole)
 3. [Nginx日志统计](/nginx-log-statistics)
-4. [Javscript简易计算器](/Calculator)
+4. [Javscript简易计算器](/calculator)
 
