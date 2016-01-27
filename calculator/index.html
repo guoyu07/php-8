@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Calculator</title>
+    <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+            font-size: 35px;
+            color: #757575;
+        }
+
+        #container {
+            text-align: center;
+            margin-top: 10px;
+            margin-left: 10px;
+        }
+
+        #calculator {
+        }
+
+        #panel {
+            border: 1px solid #828282;
+            background-color: #e6e3e4;
+            border-collapse: collapse;
+        }
+
+        #panel td {
+            padding: 20px 25px;
+            border: 1px solid #828282;
+        }
+
+        .td-left, .td-orange {
+            cursor: pointer;
+        }
+
+        .td-left:hover {
+            background-color: #b6b6b6;
+        }
+
+        .td-show {
+            background-color: #000000;
+            color: #ffffff;
+            text-align: right;
+            padding: 5px;
+        }
+
+        .td-orange {
+            background-color: #ffa003;
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+<div id="container">
+    <div id="calculator">
+        <table id="panel">
+            <tr>
+                <td colspan="4" class="td-show" data-v="">0</td>
+            </tr>
+            <tr>
+                <td class="td-v td-left" data-v="7">7</td>
+                <td class="td-v td-left" data-v="8">8</td>
+                <td class="td-v td-left" data-v="9">9</td>
+                <td class="td-v td-orange" data-v="+">+</td>
+            </tr>
+            <tr>
+                <td class="td-v td-left" data-v="4">4</td>
+                <td class="td-v td-left" data-v="5">5</td>
+                <td class="td-v td-left" data-v="6">6</td>
+                <td class="td-v td-orange" data-v="-">-</td>
+            </tr>
+            <tr>
+                <td class="td-v td-left" data-v="1">1</td>
+                <td class="td-v td-left" data-v="2">2</td>
+                <td class="td-v td-left" data-v="3">3</td>
+                <td class="td-v td-orange" data-v="*">×</td>
+            </tr>
+            <tr>
+                <td class="td-v td-left" data-v="0">0</td>
+                <td class="td-left" id="clear">C</td>
+                <td class="td-left" id="run">=</td>
+                <td class="td-v td-orange" data-v="/">÷</td>
+            </tr>
+        </table>
+    </div>
+</div>
+<script type="text/javascript">
+    (function (w) {
+        var vals = document.getElementsByClassName("td-v");
+
+        function Calculator() {
+            var alg = '';
+            var ret = '';
+            var show = document.getElementsByClassName('td-show')[0];
+            var is_finished = false;
+            var th = this;
+
+            //清除计算结果
+            this.clear = function () {
+                ret = alg = '';
+                show.textContent = 0;
+            };
+
+            //暂存计算式
+            this.prepend = function () {
+                //如果上一次计算已经结束
+                if (is_finished) {
+                    //如果点击了左边数字操作符,则先清除结果,并重新开始新的计算
+                    if (this.getAttribute('class').match(/\btd-left\b/)) {
+                        th.clear();
+                    }
+
+                    ret = show.textContent + this.innerText;
+                    alg += this.getAttribute('data-v');
+                    show.textContent = ret;
+                    is_finished = false;
+                }
+                //上一次计算尚未结束
+                else {
+                    ret += this.innerText;
+                    alg += this.getAttribute('data-v');
+                    show.textContent = ret;
+                }
+            };
+
+            //计算结果并显示
+            this.run = function () {
+                var s, n = eval(alg), e;
+                //判断是否使用科学计数法显示结果
+                if (n < 10000000) {
+                    if (n == parseInt(n)) {
+                        s = n;
+                    } else {
+                        e = new Number(n);
+                        s = e.toPrecision(7);
+                    }
+                } else {
+                    e = new Number(parseFloat(n));
+                    s = e.toPrecision(7);
+                }
+                show.textContent = s.toString().replace(/0*$/, '');
+                is_finished = true;
+            };
+        }
+
+        var cal = new Calculator();
+        for (var i = 0; i < vals.length; i++) {
+            vals[i].onclick = cal.prepend;
+        }
+
+        document.getElementById("clear").onclick = cal.clear;
+        document.getElementById("run").onclick = cal.run;
+
+
+    })(Window);
+</script>
+</body>
+</html>
