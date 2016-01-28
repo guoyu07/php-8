@@ -91,11 +91,11 @@
         var vals = document.getElementsByClassName("td-v");
 
         function Calculator() {
-            var alg = '';
-            var ret = '';
-            var show = document.getElementsByClassName('td-show')[0];
-            var is_finished = false;
-            var th = this;
+            var alg = '',
+                    ret = '',
+                    show = document.getElementsByClassName('td-show')[0],
+                    is_finished = false,
+                    th = this;
 
             //清除计算结果
             this.clear = function () {
@@ -112,7 +112,7 @@
                         th.clear();
                     }
 
-                    ret = show.textContent + this.innerText;
+                    ret = (show.textContent == 0?'':show.textContent) + this.innerText;
                     alg += this.getAttribute('data-v');
                     show.textContent = ret;
                     is_finished = false;
@@ -127,20 +127,8 @@
 
             //计算结果并显示
             this.run = function () {
-                var s, n = eval(alg), e;
-                //判断是否使用科学计数法显示结果
-                if (n < 10000000) {
-                    if (n == parseInt(n)) {
-                        s = n;
-                    } else {
-                        e = new Number(n);
-                        s = e.toPrecision(7);
-                    }
-                } else {
-                    e = new Number(parseFloat(n));
-                    s = e.toPrecision(7);
-                }
-                show.textContent = s.toString().replace(/0*$/, '');
+                alg = eval(alg);
+                show.textContent = alg;
                 is_finished = true;
             };
         }
@@ -152,7 +140,6 @@
 
         document.getElementById("clear").onclick = cal.clear;
         document.getElementById("run").onclick = cal.run;
-
 
     })(Window);
 </script>
