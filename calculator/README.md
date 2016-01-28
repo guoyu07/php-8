@@ -10,4 +10,4 @@
 
 [在线预览](http://123.125.130.41/calculator/index.html)
 
-![img](http://123.125.130.41/calculator/img/1.pic.jpg)
+![img](http://cdn.sinacloud.net/static-res/study/image/calculator/1.pic.jpg?KID=sina,jnp40bRWCOv91uB0Uxm1&Expires=1453948025&ssig=d2dEICZaCc)
