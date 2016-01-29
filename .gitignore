@@ -1,0 +1,8 @@
+/chat/vendor/*
+/chat/requirements.php
+/chat/Swoole.php
+runtime/*
+.user.ini
+/chat/tests/*
+main-local.php
+params-local.php

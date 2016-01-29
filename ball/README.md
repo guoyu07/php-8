@@ -9,6 +9,6 @@
 
 #### 3. 作品截图
 
-[在线预览](http://manongview.com/ball/ball.html )
+[在线预览](http://study.manongview.com/ball/ball.html )
 
 ![img](http://7xo28b.com2.z0.glb.qiniucdn.com/2.pic.jpg?imageView2/2/w/308/h/210/interlace/1/q/100&e=1453447643&token=SyWOgJQw2zIHI4HcBjrIUvylnAh93ZUTekDLt2yO:s-xFsDMsg-PSaejxlODQFTY4lyE)
