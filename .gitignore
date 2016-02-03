@@ -7,3 +7,4 @@ runtime/*
 main-local.php
 params-local.php
 /segmentfault/vendor/*
+/segmentfault/img/

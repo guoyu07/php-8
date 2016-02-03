@@ -285,8 +285,22 @@ while (true) {
 #### 
 
 ### 四 效果展示
+
+**抓取执行中**
+![start](3)
+
+**问答截图**
+![post](4)  
+
+**标签截图**
+![tag](5)  
+
+
 ### 五 总结
 
 
 [1]:http://segmentfault.com
 [2]:http://symfony.com/doc/current/components/dom_crawler.html
+[3]:http://study.manongview.com/segmentfault/img/start.jpg
+[4]:http://study.manongview.com/segmentfault/img/post.jpg
+[5]:http://study.manongview.com/segmentfault/img/tag.jpg

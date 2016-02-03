@@ -44,9 +44,11 @@ class Db extends PDO
 
         $this->beginTransaction();
         try {
+            //问答入库
             if (!$this->multiInsertPost($post)) {
                 throw new Exception("failed(insert post)");
             }
+            //标签入库
             if (!$this->multiInsertTag($post)) {
                 throw new Exception("failed(insert tag)");
             }
