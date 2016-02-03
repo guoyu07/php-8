@@ -68,7 +68,7 @@ app/run.php /*入口脚本*/
 > 因为功能很简单,所以没有必要引用第三方开源的PHP框架
 
 **基本配置**
-```
+```php
 class Config
 {
     public static $spider = [
