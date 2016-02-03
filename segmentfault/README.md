@@ -298,6 +298,18 @@ while (true) {
 
 ### 五 总结
 
+以上的设计思路和脚本基本上可以完成简单的抓取和统计分析任务了.  
+我们先看下TOP25标签统计结果:   
+
+[tag_stat.jpg](http://study.manongview.com/segmentfault/img/tag_stat.jpg)  
+
+可以看出segmentfault站点里,讨论最热的前三名是`javascript`,`php`,`java`,而且前25个标签里跟前端相关的(这里不包含移动APP端)居然有13个,占比50%以上了.  
+
+每月标签统计一次标签,就可以很方便的掌握最新的技术潮流,哪些技术的关注度有所下降,又有哪些在上升.  
+   
+**有待完善或不足之处**   
+1.单进程抓取,速度有些慢,如果开启多进程的,则需要考虑进程间避免重复抓取的问题  
+2.暂不支持增量更新,每次抓取到从配置项的指定页码开始一直到结束,可以根据已抓取的`post_id`做终止判断(segment的`post_id`虽不是自增,但是递增的)
 
 [1]:http://segmentfault.com
 [2]:http://symfony.com/doc/current/components/dom_crawler.html
