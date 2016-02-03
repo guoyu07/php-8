@@ -52,16 +52,16 @@ CREATE TABLE `post_tag` (
 整个项目工程文件如下:
 ```php
 app/config/config.php  /*配置文件*/
-app/helper/Db.php  
-app/helper/Redis.php
-app/helper/Spider.php
-app/helper/Util.php
-app/vendor/composer/*
-app/vendor/symfony/*
-app/vendor/autoload.php
-app/composer.json
-app/composer.lock
-app/run.php
+app/helper/Db.php  /*入库脚本*/
+app/helper/Redis.php /*缓存服务*/
+app/helper/Spider.php /*抓取解析服务*/
+app/helper/Util.php /*工具*/
+app/vendor/composer/ /*composer自动加载*/
+app/vendor/symfony/ /*第三方抓取服务包*/
+app/vendor/autoload.php /*自动加载*/
+app/composer.json /*项目配置*/
+app/composer.lock /*项目配置*/
+app/run.php /*入口脚本*/
 ```
 
 #### 
