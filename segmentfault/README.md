@@ -286,13 +286,13 @@ while (true) {
 
 ### 四 效果展示
 
-**抓取执行中**
+**抓取执行中**  
 ![start](http://study.manongview.com/segmentfault/img/start.jpg)
 
-**问答截图**
+**问答截图**  
 ![post](http://study.manongview.com/segmentfault/img/post.jpg)  
 
-**标签截图**
+**标签截图**  
 ![tag](http://study.manongview.com/segmentfault/img/tag.jpg)  
 
 
