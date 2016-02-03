@@ -6,3 +6,4 @@ runtime/*
 /chat/tests/*
 main-local.php
 params-local.php
+/segmentfault/vendor/*
