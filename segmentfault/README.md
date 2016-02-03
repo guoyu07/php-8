@@ -64,6 +64,34 @@ app/composer.lock /*项目配置*/
 app/run.php /*入口脚本*/
 ```
 
+curl抓取页面
+```php
+    /***
+     *
+     * 抓取指定url的内容
+     *
+     * @param $url
+     * @return bool|mixed
+     */
+    public function getUrlContent($url)
+    {
+        if (!$url || !\filter_var($url, FILTER_VALIDATE_URL)) {
+            return false;
+        }
+
+        $curl = \curl_init();
+        \curl_setopt($curl, CURLOPT_URL, $url);
+        \curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        \curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+        \curl_setopt($curl, CURLOPT_TIMEOUT, Config::$spider['timeout']);
+        \curl_setopt($curl, CURLOPT_USERAGENT, 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.111 Safari/537.36');
+        $content = curl_exec($curl);
+        curl_close($curl);
+
+        return $content;
+    }
+```
+
 #### 
  
 #### 
