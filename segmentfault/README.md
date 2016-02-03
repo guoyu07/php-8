@@ -22,7 +22,7 @@ composer依赖
 #### 数据库设计
 
 设计两张表:`post`,`post_tag`
-`
+```mysql
 CREATE TABLE `post` (
  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'pk',
  `post_id` varchar(32) NOT NULL COMMENT '文章id',
@@ -38,16 +38,16 @@ CREATE TABLE `post` (
  PRIMARY KEY (`id`),
  KEY `idx_post_id` (`post_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=7108 DEFAULT CHARSET=utf8 COMMENT='帖子';
-`
+```
 
-`
+```mysql
 CREATE TABLE `post_tag` (
  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK',
  `post_id` varchar(32) NOT NULL COMMENT '帖子ID',
  `tag_name` varchar(128) NOT NULL COMMENT '标签名称',
  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=15349 DEFAULT CHARSET=utf8 COMMENT='帖子-标签关联表';
-`
+````
 #### Redis设计
 
 #### 
