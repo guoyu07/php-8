@@ -19,9 +19,7 @@ composer依赖
 
 ### 三 流程与实践
 
-#### 数据库设计
-
-设计两张表:`post`,`post_tag`
+首先,先设计两张表:`post`,`post_tag`
 ```mysql
 CREATE TABLE `post` (
  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'pk',
@@ -48,7 +46,23 @@ CREATE TABLE `post_tag` (
  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=15349 DEFAULT CHARSET=utf8 COMMENT='帖子-标签关联表';
 ````
-#### Redis设计
+当然有同学说,这么设计不对,标签是个独立的主体,应该设计`post`,`tag`,`post_tag`三张表,文档和标签之间再建立联系,这样不仅清晰明了,而且查询也很方便.
+这里简单处理是因为首先不是很正式的开发需求,自娱自乐,越简单搞起来越快,另外三张表抓取入库时就要多一张表,更重要的判断标签重复性,导致抓取速度减慢.
+
+整个项目工程文件如下:
+```php
+app/config/config.php  /*配置文件*/
+app/helper/Db.php  
+app/helper/Redis.php
+app/helper/Spider.php
+app/helper/Util.php
+app/vendor/composer/*
+app/vendor/symfony/*
+app/vendor/autoload.php
+app/composer.json
+app/composer.lock
+app/run.php
+```
 
 #### 
  
