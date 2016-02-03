@@ -301,7 +301,7 @@ while (true) {
 以上的设计思路和脚本基本上可以完成简单的抓取和统计分析任务了.  
 我们先看下TOP25标签统计结果:   
 
-![tag_stat.jpg](http://study.manongview.com/segmentfault/img/tag_stat.jpg)  
+![tag_stat.jpg](http://study.manongview.com/segmentfault/img/tag_statistics.jpg)  
 
 可以看出segmentfault站点里,讨论最热的前三名是`javascript`,`php`,`java`,而且前25个标签里跟前端相关的(这里不包含移动APP端)居然有13个,占比50%以上了.  
 
