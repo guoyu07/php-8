@@ -277,14 +277,9 @@ while (true) {
 };
 
 ```
-运用while无限循环的方式执行抓取,遇到抓取失败时,自动退出,中途可以按`Ctrl + C`中断执行.
+运用while无限循环的方式执行抓取,遇到抓取失败时,自动退出,中途可以按`Ctrl + C`中断执行.  
 
-
-#### 
- 
-#### 
-
-### 四 效果展示
+### 四 效果展示  
 
 **抓取执行中**  
 ![start](http://study.manongview.com/segmentfault/img/start.jpg)
