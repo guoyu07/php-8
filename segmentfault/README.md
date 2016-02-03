@@ -293,7 +293,7 @@ while (true) {
 ![post](4)  
 
 **标签截图**
-![tag](5)  
+![tag](http://study.manongview.com/segmentfault/img/tag.jpg)  
 
 
 ### 五 总结
@@ -303,4 +303,3 @@ while (true) {
 [2]:http://symfony.com/doc/current/components/dom_crawler.html
 [3]:http://study.manongview.com/segmentfault/img/start.jpg
 [4]:http://study.manongview.com/segmentfault/img/post.jpg
-[5]:http://study.manongview.com/segmentfault/img/tag.jpg
