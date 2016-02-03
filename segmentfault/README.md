@@ -1,12 +1,13 @@
 # PHP爬虫抓取segmentfault问答
 
 ### 一 需求概述
+___
 抓取中国领先的开发者社区[segment.com](1)网站上问答及标签数据,侧面反映最新的技术潮流以及国内程序猿的关注焦点.
 
 > 注:抓取脚本纯属个人技术锻炼,非做任何商业用途.
 
 ### 二 开发环境及包依赖
-
+___
 运行环境
 - CentOS Linux release 7.0.1406 (Core)
 - PHP7.0.2
@@ -18,7 +19,7 @@ composer依赖
 - [symfony/dom-crawler](2)
 
 ### 三 流程与实践
-
+___
 首先,先设计两张表:`post`,`post_tag`
 ```mysql
 CREATE TABLE `post` (
@@ -280,6 +281,7 @@ while (true) {
 运用while无限循环的方式执行抓取,遇到抓取失败时,自动退出,中途可以按`Ctrl + C`中断执行.  
 
 ### 四 效果展示  
+___
 
 **抓取执行中**  
 ![start](http://study.manongview.com/segmentfault/img/start.jpg)
@@ -292,7 +294,7 @@ while (true) {
 
 
 ### 五 总结
-
+___
 以上的设计思路和脚本基本上可以完成简单的抓取和统计分析任务了.  
 我们先看下TOP25标签统计结果:   
 
