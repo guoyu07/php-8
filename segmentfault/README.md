@@ -45,7 +45,7 @@ CREATE TABLE `post_tag` (
  `tag_name` varchar(128) NOT NULL COMMENT '标签名称',
  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=15349 DEFAULT CHARSET=utf8 COMMENT='帖子-标签关联表';
-````
+```
 当然有同学说,这么设计不对,标签是个独立的主体,应该设计`post`,`tag`,`post_tag`三张表,文档和标签之间再建立联系,这样不仅清晰明了,而且查询也很方便.
 这里简单处理是因为首先不是很正式的开发需求,自娱自乐,越简单搞起来越快,另外三张表抓取入库时就要多一张表,更重要的判断标签重复性,导致抓取速度减慢.
 
