@@ -116,7 +116,7 @@ public function getUrlContent($url)
 ```
 这里要有两点要注意:  
 
-####第一,要开启`CURLOPT_FOLLOWLOCATION`301跟踪抓取,因为segmentfautl官方会做域名跳转,比如`http://www.segmentfault.com/`会跳转到到"http://segmentfault.com"等等.  
+第一,要开启`CURLOPT_FOLLOWLOCATION`301跟踪抓取,因为segmentfautl官方会做域名跳转,比如`http://www.segmentfault.com/`会跳转到到"http://segmentfault.com"等等.  
 第二,指定UserAgent,否则会出现301重定向到浏览器升级页面.  
 
 
