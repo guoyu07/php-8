@@ -309,7 +309,7 @@ while (true) {
    
 **有待完善或不足之处**   
 1.单进程抓取,速度有些慢,如果开启多进程的,则需要考虑进程间避免重复抓取的问题  
-2.暂不支持增量更新,每次抓取到从配置项的指定页码开始一直到结束,可以根据已抓取的`post_id`做终止判断(segment的`post_id`虽不是自增,但是递增的)
+2.暂不支持增量更新,每次抓取到从配置项的指定页码开始一直到结束,可以根据已抓取的`post_id`做终止判断(`post_id`虽不是连续自增,但是一直递增的)
 
 [1]:http://segmentfault.com
 [2]:http://symfony.com/doc/current/components/dom_crawler.html
