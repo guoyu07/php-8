@@ -64,32 +64,192 @@ app/composer.lock /*项目配置*/
 app/run.php /*入口脚本*/
 ```
 
-curl抓取页面
+> 因为功能很简单,所以没有必要引用第三方开源的PHP框架
+
+**curl抓取页面的函数**
 ```php
-    /***
-     *
-     * 抓取指定url的内容
-     *
-     * @param $url
-     * @return bool|mixed
-     */
-    public function getUrlContent($url)
-    {
-        if (!$url || !\filter_var($url, FILTER_VALIDATE_URL)) {
-            return false;
-        }
-
-        $curl = \curl_init();
-        \curl_setopt($curl, CURLOPT_URL, $url);
-        \curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-        \curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
-        \curl_setopt($curl, CURLOPT_TIMEOUT, Config::$spider['timeout']);
-        \curl_setopt($curl, CURLOPT_USERAGENT, 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.111 Safari/537.36');
-        $content = curl_exec($curl);
-        curl_close($curl);
-
-        return $content;
+public function getUrlContent($url)
+{
+    if (!$url || !\filter_var($url, FILTER_VALIDATE_URL)) {
+        return false;
     }
+
+    $curl = \curl_init();
+    \curl_setopt($curl, CURLOPT_URL, $url);
+    \curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+    \curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+    \curl_setopt($curl, CURLOPT_TIMEOUT, Config::$spider['timeout']);
+    \curl_setopt($curl, CURLOPT_USERAGENT, 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.111 Safari/537.36');
+    $content = curl_exec($curl);
+    curl_close($curl);
+
+    return $content;
+}
+```
+这里要有两点要注意:
+第一,要开启`CURLOPT_FOLLOWLOCATION`301跟踪抓取,因为segmentfautl官方会做域名跳转,比如`http://www.segmentfault.com/`会跳转到到"http://segmentfault.com"等等.
+第二,指定UserAgent,否则会出现301重定向到浏览器升级页面.
+
+
+**crawler解析处理**
+```php
+public function craw()
+{
+    $content = $this->getUrlContent($this->getUrl());
+    $crawler = new Crawler();
+    $crawler->addHtmlContent($content);
+
+    $found = $crawler->filter(".stream-list__item");
+
+    //判断是否页面已经结束
+    if ($found->count()) {
+        $data = $found->each(function (Crawler $node, $i) {
+            //问答ID
+            $href    = trim($node->filter(".author li a")->eq(1)->attr('href'));
+            $a       = explode("/", $href);
+            $post_id = isset($a[2]) ? $a[2] : 0;
+
+            //检查该问答是否已经抓取过
+            if ($post_id == 0 || !(new Redis())->checkPostExists($post_id)) {
+                return $this->getPostData($node, $post_id, $href);
+            }
+
+            return false;
+        });
+        //去除空的数据
+        foreach ($data as $i => $v) {
+            if (!$v) {
+                unset($data[$i]);
+            }
+        }
+        $data = array_values($data);
+        $this->incrementPage();
+
+        $continue = true;
+    } else {
+        $data     = [];
+        $continue = false;
+    }
+
+
+    return [$data, $continue];
+}
+
+private function getPostData(Crawler $node, $post_id, $href)
+{
+    $tmp            = [];
+    $tmp['post_id'] = $post_id;
+    //标题
+    $tmp['title'] = trim($node->filter(".summary h2.title a")->text());
+
+    //回答数
+    $tmp['reply_num'] = intval(trim($node->filter(".qa-rank .answers")->text()));
+
+    //浏览数
+    $tmp['view_num'] = intval(trim($node->filter(".qa-rank .views")->text()));
+
+    //投票数
+    $tmp['vote_num'] = intval(trim($node->filter(".qa-rank .votes")->text()));
+
+    //发布者
+    $tmp['author'] = trim($node->filter(".author li a")->eq(0)->text());
+
+    //发布时间
+    $origin_time = trim($node->filter(".author li a")->eq(1)->text());
+    if (mb_substr($origin_time, -2, 2, 'utf-8') == '提问') {
+        $tmp['post_time'] = Util::parseDate($origin_time);
+    } else {
+        $tmp['post_time'] = Util::parseDate($this->getPostDateByDetail($href));
+    }
+
+    //收藏数
+    $collect = $node->filter(".author .pull-right");
+    if ($collect->count()) {
+        $tmp['collect_num'] = intval(trim($collect->text()));
+    } else {
+        $tmp['collect_num'] = 0;
+    }
+
+    $tmp['tags'] = [];
+    //标签列表
+    $tags = $node->filter(".taglist--inline");
+    if ($tags->count()) {
+        $tmp['tags'] = $tags->filter(".tagPopup")->each(function (Crawler $node, $i) {
+            return $node->filter('.tag')->text();
+        });
+    }
+
+    $tmp['tag_num'] = count($tmp['tags']);
+
+    return $tmp;
+}
+```
+通过crawler将抓取的列表解析成待入库的二维数据,每次抓完,分页参数递增.
+这里要注意几点:
+1.有些问答已经抓取过了,入库时需要排除,因此此处加入了redis缓存判断.
+2.问答的创建时间需要根据"提问","解答","更新"状态来动态解析.
+3.需要把类似"5分钟前","12小时前","3天前"解析成标准的`Y-m-d`格式
+
+**入库操作**
+```php
+public function multiInsert($post)
+{
+    if (!$post || !is_array($post)) {
+        return false;
+    }
+
+    $this->beginTransaction();
+    try {
+        //问答入库
+        if (!$this->multiInsertPost($post)) {
+            throw new Exception("failed(insert post)");
+        }
+        //标签入库
+        if (!$this->multiInsertTag($post)) {
+            throw new Exception("failed(insert tag)");
+        }
+        $this->commit();
+        $this->pushPostIdToCache($post);
+
+        $ret = true;
+    } catch (Exception $e) {
+        $this->rollBack();
+        $ret = false;
+    }
+
+    return $ret;
+}
+
+private function multiInsertPost($post)
+{
+    //拼接问答SQL插入语句
+    $sql = 'INSERT INTO `post`(`post_id`,`author`,`title`,`view_num`,`reply_num`,`collect_num`,`tag_num`,`vote_num`,`post_time`) VALUES ';
+    $dot = '';
+    foreach ($post as $i => $item) {
+        $sql .= "$dot(:post_id{$i},:author{$i},:title{$i},:view_num{$i},:reply_num{$i},:collect_num{$i},:tag_num{$i},:vote_num{$i},:post_time{$i})";
+        $dot = ',';
+    }
+    $sql .= ';';
+
+    /***
+     * 批量绑定变量,注意绑定变量是基于引用的,千万不要用$item取值
+     * [详细见鸟哥论坛:http://www.laruence.com/2012/10/16/2831.html]
+     */
+    $stmt = $this->prepare($sql);
+    foreach ($post as $i => $item) {
+        $stmt->bindParam(':' . 'post_id' . $i, $post[$i]['post_id']);
+        $stmt->bindParam(':' . 'author' . $i, $post[$i]['author']);
+        $stmt->bindParam(':' . 'title' . $i, $post[$i]['title']);
+        $stmt->bindParam(':' . 'view_num' . $i, $post[$i]['view_num']);
+        $stmt->bindParam(':' . 'reply_num' . $i, $post[$i]['reply_num']);
+        $stmt->bindParam(':' . 'collect_num' . $i, $post[$i]['collect_num']);
+        $stmt->bindParam(':' . 'tag_num' . $i, $post[$i]['tag_num']);
+        $stmt->bindParam(':' . 'vote_num' . $i, $post[$i]['vote_num']);
+        $stmt->bindParam(':' . 'post_time' . $i, $post[$i]['post_time']);
+    }
+
+    return $stmt->execute();
+}
 ```
 
 #### 
