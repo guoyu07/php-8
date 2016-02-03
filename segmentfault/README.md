@@ -66,6 +66,34 @@ app/run.php /*入口脚本*/
 
 > 因为功能很简单,所以没有必要引用第三方开源的PHP框架
 
+**基本配置**
+```
+class Config
+{
+    public static $spider = [
+        'base_url'  => 'http://segmentfault.com/questions?',
+        'from_page' => 1,
+        'timeout'   => 5,
+    ];
+
+    public static $redis = [
+        'host'    => '127.0.0.1',
+        'port'    => 10000,
+        'timeout' => 5,
+    ];
+
+    public static $mysql = [
+        'host'     => '127.0.0.1',
+        'port'     => '3306',
+        'dbname'   => 'segmentfault',
+        'dbuser'     => 'user',
+        'dbpwd' => 'user',
+        'charset'  => 'utf8',
+    ];
+}
+```
+
+
 **curl抓取页面的函数**
 ```php
 public function getUrlContent($url)
@@ -219,38 +247,36 @@ public function multiInsert($post)
 
     return $ret;
 }
-
-private function multiInsertPost($post)
-{
-    //拼接问答SQL插入语句
-    $sql = 'INSERT INTO `post`(`post_id`,`author`,`title`,`view_num`,`reply_num`,`collect_num`,`tag_num`,`vote_num`,`post_time`) VALUES ';
-    $dot = '';
-    foreach ($post as $i => $item) {
-        $sql .= "$dot(:post_id{$i},:author{$i},:title{$i},:view_num{$i},:reply_num{$i},:collect_num{$i},:tag_num{$i},:vote_num{$i},:post_time{$i})";
-        $dot = ',';
-    }
-    $sql .= ';';
-
-    /***
-     * 批量绑定变量,注意绑定变量是基于引用的,千万不要用$item取值
-     * [详细见鸟哥论坛:http://www.laruence.com/2012/10/16/2831.html]
-     */
-    $stmt = $this->prepare($sql);
-    foreach ($post as $i => $item) {
-        $stmt->bindParam(':' . 'post_id' . $i, $post[$i]['post_id']);
-        $stmt->bindParam(':' . 'author' . $i, $post[$i]['author']);
-        $stmt->bindParam(':' . 'title' . $i, $post[$i]['title']);
-        $stmt->bindParam(':' . 'view_num' . $i, $post[$i]['view_num']);
-        $stmt->bindParam(':' . 'reply_num' . $i, $post[$i]['reply_num']);
-        $stmt->bindParam(':' . 'collect_num' . $i, $post[$i]['collect_num']);
-        $stmt->bindParam(':' . 'tag_num' . $i, $post[$i]['tag_num']);
-        $stmt->bindParam(':' . 'vote_num' . $i, $post[$i]['vote_num']);
-        $stmt->bindParam(':' . 'post_time' . $i, $post[$i]['post_time']);
-    }
-
-    return $stmt->execute();
-}
 ```
+采用事务+批量方式的一次提交入库,入库完成后将`post_id`加入redis缓存
+
+**启动作业**
+```php
+require './vendor/autoload.php';
+
+use helper\Spider;
+use helper\Db;
+
+$spider = new Spider();
+while (true) {
+    echo 'crawling from page:' . $spider->getUrl() . PHP_EOL;
+    list($data, $ret) = $data = $spider->craw();
+    if ($data) {
+        $ret = (new Db)->multiInsert($data);
+        echo count($data) . " new post crawled " . ($ret ? 'success' : 'failed') . PHP_EOL;
+    } else {
+        echo 'no new post crawled'.PHP_EOL;
+    }
+    echo PHP_EOL;
+
+    if (!$ret) {
+        exit("work done");
+    }
+};
+
+```
+运用while无限循环的方式执行抓取,遇到抓取失败时,自动退出,中途可以按`Ctrl + C`中断执行.
+
 
 #### 
  
