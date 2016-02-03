@@ -115,7 +115,9 @@ public function getUrlContent($url)
 }
 ```
 这里要有两点要注意:
+
 第一,要开启`CURLOPT_FOLLOWLOCATION`301跟踪抓取,因为segmentfautl官方会做域名跳转,比如`http://www.segmentfault.com/`会跳转到到"http://segmentfault.com"等等.
+
 第二,指定UserAgent,否则会出现301重定向到浏览器升级页面.
 
 
@@ -214,8 +216,11 @@ private function getPostData(Crawler $node, $post_id, $href)
 ```
 通过crawler将抓取的列表解析成待入库的二维数据,每次抓完,分页参数递增.
 这里要注意几点:
+
 1.有些问答已经抓取过了,入库时需要排除,因此此处加入了redis缓存判断.
+
 2.问答的创建时间需要根据"提问","解答","更新"状态来动态解析.
+
 3.需要把类似"5分钟前","12小时前","3天前"解析成标准的`Y-m-d`格式
 
 **入库操作**
