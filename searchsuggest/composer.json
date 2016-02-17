@@ -1,0 +1,15 @@
+{
+  "name": "sinopex/search-suggest",
+  "description": "search auto complete using redis sorted sets",
+  "authors": [
+    {
+      "name": "wangshijin",
+      "email": "wsj6563@gmail.com"
+    }
+  ],
+  "autoload": {
+    "classmap": [
+      "helper"
+    ]
+  }
+}
