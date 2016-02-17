@@ -5,4 +5,4 @@
 3. [Nginx日志统计](/nginx-log-statistics)
 4. [Javscript简易计算器](/calculator)
 5. [PHP抓取segmentfault问答及标签信息](/segmentfault)
-6. [利用redis实现搜索自动提示](/searchSuggest)
+6. [利用redis实现搜索自动提示](/searchsuggest)
