@@ -12,12 +12,7 @@
         "symfony/dom-crawler": "^3.0",
         "symfony/css-selector": "^3.0"
     },
-    "repositories": {
-        "packagist": {
-            "type": "composer",
-            "url": "http://packagist.phpcomposer.com"
-        }
-    },
+
     "autoload":{
 	"classmap":["config","helper"]
     }

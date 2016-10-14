@@ -11,6 +11,7 @@ require './vendor/autoload.php';
 
 use helper\Spider;
 use helper\Db;
+use config\Config;
 
 $spider = new Spider();
 while (true) {
@@ -24,7 +25,7 @@ while (true) {
     }
     echo PHP_EOL;
 
-    if (!$ret) {
+    if (!$ret || $spider->getCurrentPage() > Config::$spider['end_page']) {
         exit("work done");
     }
 };

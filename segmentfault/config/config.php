@@ -15,6 +15,7 @@ class Config
     public static $spider = [
         'base_url'  => 'http://segmentfault.com/questions?',
         'from_page' => 1,
+        'end_page'  => 100,
         'timeout'   => 5,
     ];
 

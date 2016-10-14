@@ -29,19 +29,21 @@ class Spider
 
         //判断是否页面已经结束
         if ($found->count()) {
-            $data = $found->each(function (Crawler $node, $i) {
-                //问答ID
-                $href    = trim($node->filter(".author li a")->eq(1)->attr('href'));
-                $a       = explode("/", $href);
-                $post_id = isset($a[2]) ? $a[2] : 0;
+            $data = $found->each(
+                function (Crawler $node, $i) {
+                    //问答ID
+                    $href    = trim($node->filter(".author li a")->eq(1)->attr('href'));
+                    $a       = explode("/", $href);
+                    $post_id = isset($a[2]) ? $a[2] : 0;
 
-                //检查该问题是否已经抓取过
-                if ($post_id == 0 || !(new Redis())->checkPostExists($post_id)) {
-                    return $this->getPostData($node, $post_id, $href);
+                    //检查该问题是否已经抓取过
+                    if ($post_id == 0 || !(new Redis())->checkPostExists($post_id)) {
+                        return $this->getPostData($node, $post_id, $href);
+                    }
+
+                    return false;
                 }
-
-                return false;
-            });
+            );
             //去除空的数据
             foreach ($data as $i => $v) {
                 if (!$v) {
@@ -109,9 +111,11 @@ class Spider
         //标签列表
         $tags = $node->filter(".taglist--inline");
         if ($tags->count()) {
-            $tmp['tags'] = $tags->filter(".tagPopup")->each(function (Crawler $node, $i) {
-                return $node->filter('.tag')->text();
-            });
+            $tmp['tags'] = $tags->filter(".tagPopup")->each(
+                function (Crawler $node, $i) {
+                    return $node->filter('.tag')->text();
+                }
+            );
         }
 
         $tmp['tag_num'] = count($tmp['tags']);
@@ -131,6 +135,17 @@ class Spider
             $this->cur_page = Config::$spider['from_page'];
         }
         $this->cur_page++;
+    }
+
+    /***
+     *
+     * 获取当前分页
+     *
+     * @return int
+     */
+    public function getCurrentPage()
+    {
+        return $this->cur_page;
     }
 
     /***
