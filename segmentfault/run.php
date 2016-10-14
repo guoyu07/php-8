@@ -1,3 +1,4 @@
+#!/usr/bin/php
 <?php
 /**
  * run.php
@@ -7,7 +8,8 @@
  * @Encoding: UTF-8
  * @Created by PhpStorm.
  */
-require './vendor/autoload.php';
+
+require dirname(__FILE__).'/vendor/autoload.php';
 
 use helper\Spider;
 use helper\Db;
