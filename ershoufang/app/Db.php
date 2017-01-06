@@ -7,7 +7,7 @@ class Db extends PDO
 {
     public function __construct()
     {
-        $dsn     = "mysql:host=127.0.0.0;port=3306;dbname=fang";
+        $dsn     = "mysql:host=127.0.0.1;port=3306;dbname=fang";
         $options = [
             \PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8;",
             \PDO::ATTR_ERRMODE            => \PDO::ERRMODE_EXCEPTION,
