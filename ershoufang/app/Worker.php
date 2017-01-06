@@ -22,15 +22,12 @@ class Worker
      */
     public function onWorkerStart($serv, $work_id)
     {
-        if ($work_id >= $serv->setting['worker_num']) {
+        if ($work_id > $serv->setting['worker_num']) {
             $title = $serv->setting['process_name'] . '_task';
         } else {
             $title = $serv->setting['process_name'] . '_worker';
         }
-
-        cli_set_process_title($title);
-
-//        swoole_set_process_name($title);
+        echo $title . $work_id . ' started' . PHP_EOL;
     }
 
     public function onStart($serv)
@@ -71,13 +68,13 @@ class Worker
      * @param $task_id
      * @param $from_id
      * @param $data
-     * @return boolean
+     * @return array
      */
     public function onTask($serv, $task_id, $from_id, $data)
     {
-        $redis = new Redis();
-        $db    = new Db();
-        $return   = ['success' => 0, 'fail' => 0];
+        $redis  = new Redis();
+        $db     = new Db();
+        $return = ['success' => 0, 'fail' => 0];
         while (1) {
             $page = $redis->getPage();
 
@@ -99,7 +96,7 @@ class Worker
 
     public function onFinish($serv, $task_id, $data)
     {
-        echo "Finish {$task_id}，success:" . $data['success'] . ',fail:' . $data['fail'].PHP_EOL;
+        echo "Finish {$task_id}，success:" . $data['success'] . ',fail:' . $data['fail'] . PHP_EOL;
     }
 
     public function onClose($serv, $fd, $from_id)

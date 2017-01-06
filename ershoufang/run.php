@@ -9,5 +9,5 @@
  */
 require dirname(__FILE__) . '/vendor/autoload.php';
 
-use App\Worker;
-(new Worker())->run();
+(new App\Worker())->run();
+//echo (new \App\Spider())->getUrlContent('http://sh.lianjia.com/ershoufang/d2');
