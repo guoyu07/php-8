@@ -22,7 +22,7 @@ class Suggest
     public function __construct()
     {
         $this->redis = (new \Redis());
-        if (!$this->redis->connect('127.0.0.1', 10000, 3)) {
+        if (!$this->redis->connect('127.0.0.1', 6379, 3)) {
             exit('redis connect failed');
         }
     }
